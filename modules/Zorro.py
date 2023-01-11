@@ -32,6 +32,11 @@ class Zorro:
         self.debug = debug
         self.encryptionType = encryptionType
 
+    # This is the actual encryption method, it takes in an object
+    # and then encrypts/masks it. 
+    # Encryption type 0 is reversable
+    # Encryption type 1 is NOT easily reversable without knowing the input
+    # Encryption type ELSE is just the input value as a string
     def __encrypt(self, value):
         value = str(value)
         if(self.encryptionType == 0):
@@ -41,9 +46,12 @@ class Zorro:
         else: 
             return value
 
+    # Function which encrypts all the responses. Skips ones wich are of the None type
     def __maskMultiple(self, serverResponses):
         return [self.__maskSingle(response) for response in serverResponses if self.__maskSingle(response) is not None]
 
+    # This function tries to convert the objects/jsons from the SQS server to objects for the Postgres server
+    # Fiels which need masking are masked.
     def  __maskSingle(self, serverResponse):
         try:
             masked_response = {}
@@ -62,7 +70,9 @@ class Zorro:
                 print(keyexception)
             return None
 
-
+    # This is the wrapper function. Incase the incoming object is not a list,
+    # it can dynamically switch between lists of objects or just a single object.
+    # Keeps the code more flexible to prevent issues.
     def mask(self, serverResponses):
         if(type(serverResponses) == "list"):
             return self.__maskMultiple(serverResponses)

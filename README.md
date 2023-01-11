@@ -106,6 +106,7 @@ If you made it until here, executing the code is a piece of cake. Simply run ```
  - What are the assumptions you made?
 	 - One assumption I made is that using Python3 is fast enough. Python3 is by far not the fastest language out there, so if speed is important, this might need to be recorded in something like Java or C++. I heard that Rust is incredibly quick as well, but I have never worked with Rust before, so I can't really talk to the benefits of using that over something like Java or C++.
 	 - Another assumption I made is that this is made to be run by a person, and not continuously on a server in production. If this was supposed to be run in production, I would not add the option to see the table after it finishes running. I would probably also change the output, and maybe add some other output to let an engineer know it's running and hasn't encountered any issues. And  if it does, it should output it and continue working if it still can. Maybe even add a function that notifies an engineer if an error is encountered so that they can look into it. This is something we did a lot at Amazon when I interned there.
+	 - The ``user_logins`` table has a field called ``create_date``. I was not able to find a ``create_date`` in any of the responses from the AWS SQS Queue server, so I set that field to the date on which the code was run. I also only added month, day, and year. This is something that can be changed in the future and something I would ask the data scientist how they would like to have as it is a very quick fix to make.
 
 ---
 
