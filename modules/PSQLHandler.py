@@ -88,9 +88,22 @@ class PSQLHandler:
                                 create_date date
                                 ); """)
 
-        query = 'INSERT INTO user_logins(user_id, device_type, masked_ip, masked_device_id, locale, app_version, create_date) VALUES (%s, %s, %s, %s, %s, %s, TO_DATE(%s,\'YYYYMMDD\'));'
-        cursor.execute(query, (data['user_id'], data['device_type'], data['masked_ip'], data["masked_device_id"], data["locale"],
-                                str(data["app_version"]).replace(".", ""), str(datetime.today().strftime('%Y%m%d'))))
+        query = ('INSERT INTO user_logins(user_id, \
+                                            device_type, \
+                                            masked_ip, \
+                                            masked_device_id, \
+                                            locale, \
+                                            app_version, \
+                                            create_date) \
+                    VALUES (%s, %s, %s, %s, %s, %s, TO_DATE(%s,\'YYYYMMDD\'));')
+
+        cursor.execute(query, (data['user_id'], 
+                                data['device_type'], 
+                                data['masked_ip'], 
+                                data["masked_device_id"], 
+                                data["locale"], 
+                                str(data["app_version"]).replace(".", ""), 
+                                str(datetime.today().strftime('%Y%m%d'))))
 
         self.connection.commit()
 
@@ -103,6 +116,7 @@ class PSQLHandler:
     # Retrieves the user_logins table from the sql database and
     # then pretty prints it using the __prettyPrintTable function
     def get_user_logins(self, limit=None):
-        query = "SELECT * FROM user_logins;" if limit == None else ("SELECT * FROM user_logins LIMIT " + str(limit) + ";")
+        query = ("SELECT * FROM user_logins;" if limit == None else 
+                    ("SELECT * FROM user_logins LIMIT " + str(limit) + ";"))
         # print("Query chosen: ", query)
         self.__prettyPrintTable(json.loads(self.__get_json_response(query)))

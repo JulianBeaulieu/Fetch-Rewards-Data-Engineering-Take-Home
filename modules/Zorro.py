@@ -48,11 +48,18 @@ class Zorro:
 
     # Function which encrypts all the responses. Skips ones wich are of the None type
     def __maskMultiple(self, serverResponses):
-        return [self.__maskSingle(response) for response in serverResponses if self.__maskSingle(response) is not None]
+        responseList = []
+        for response in serverResponses:
+            tempMask = self.__maskSingle(response)
+            if tempMask is not None:
+                responseList.append(tempMask)
+                
+        return responseList
 
-    # This function tries to convert the objects/jsons from the SQS server to objects for the Postgres server
+    # This function tries to convert the objects/jsons from the SQS server 
+    # to objects for the Postgres server
     # Fiels which need masking are masked.
-    def  __maskSingle(self, serverResponse):
+    def __maskSingle(self, serverResponse):
         try:
             masked_response = {}
             for field in self.queue_fields:
@@ -77,4 +84,4 @@ class Zorro:
         if(type(serverResponses) == "list"):
             return self.__maskMultiple(serverResponses)
         else:
-            return self.__maskMultiple(serverResponses)
+            return self.__maskSingle(serverResponses)
